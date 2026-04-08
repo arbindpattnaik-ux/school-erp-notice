@@ -1,0 +1,9 @@
+
+CREATE TABLE notices (
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(255),
+content TEXT,
+category VARCHAR(50),
+date_posted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+expiry_date DATE
+);
