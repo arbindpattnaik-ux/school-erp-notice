@@ -81,5 +81,32 @@ def public_add():
         return redirect('/')
 
     return render_template('public_add.html')
+
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit(id):
+    if 'user' not in session:
+        return redirect('/login')
+
+    db = get_db()
+    cursor = db.cursor()
+
+    if request.method == 'POST':
+        cursor.execute(
+            "UPDATE notices SET title=%s, content=%s, category=%s, expiry_date=%s WHERE id=%s",
+            (
+                request.form['title'],
+                request.form['content'],
+                request.form['category'],
+                request.form['expiry'],
+                id
+            )
+        )
+        db.commit()
+        return redirect('/dashboard')
+
+    cursor.execute("SELECT * FROM notices WHERE id=%s", (id,))
+    notice = cursor.fetchone()
+
+    return render_template('edit.html', notice=notice)
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT",5000)))
