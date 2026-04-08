@@ -66,5 +66,20 @@ def delete(id):
     db.commit()
     return redirect("/dashboard")
 
+@app.route('/public-add', methods=['GET', 'POST'])
+def public_add():
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+
+        cursor.execute(
+            "INSERT INTO notices (title, content, category, expiry_date) VALUES (%s,%s,%s,%s)",
+            (request.form['title'], request.form['content'], request.form['category'], request.form['expiry'])
+        )
+        db.commit()
+
+        return redirect('/')
+
+    return render_template('public_add.html')
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT",5000)))
